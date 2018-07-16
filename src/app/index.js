@@ -32,22 +32,57 @@ render(<App />, window.document.getElementById('app'));
 
 */
 
-import { createStore } from "redux";
+import { createStore, combineReducers, applyMiddleware } from "redux";
+import logger from "redux-logger";
 
-const reducer = (state, action) => {
-    switch(action.type) {
+const mathReducer = (state = {
+    result: 1,
+    lastValues: []
+}, action) => {
+    switch (action.type) {
         case "ADD":
-            state += action.payload;
+            state =  Object.assign({}, state, {
+                result: state.result + action.payload,
+                lastValues: [...state.lastValues, action.payload]
+            });
             break;
         case "SUBTRACT":
-            state -= action.payload;
+            state =  Object.assign({}, state, {
+                result: state.result - action.payload,
+                lastValues: [...state.lastValues, action.payload]
+            });
             break;
     }
 
     return state;
 }
 
-const store = createStore(reducer, 1);
+const userReducer = (state = {
+    name: "Sonik",
+    age: 21
+}, action) => {
+    switch (action.type) {
+        case "SET_NAME":
+            state = Object.assign({}, state, {
+                name: action.payload
+            });
+            break;
+        case "SET_AGE":
+            state = Object.assign({}, state, {
+                age: action.payload
+            });
+            break;
+    }
+
+    return state;
+}
+
+const myLogger = (store) => (next) => (action) => {
+    console.log("Logged Action: ", action);
+    next(action);
+}
+
+const store = createStore(combineReducers({mathReducer, userReducer}), {}, applyMiddleware(logger));
 
 store.subscribe(() => {
     console.log("Store updated", store.getState());
@@ -66,4 +101,9 @@ store.dispatch({
 store.dispatch({
     type: "ADD",
     payload: 10
+});
+
+store.dispatch({
+    type: "SET_NAME",
+    payload: "newName"
 });
