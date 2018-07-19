@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { User } from "./User";
+import { User } from "../components/User";
 import Main from "./Main";
 
 class App extends React.Component {
