@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { setName as setNameAction } from "../actions/userAction"
 
 class Main extends React.Component {
     constructor(props) {
@@ -39,7 +40,7 @@ class Main extends React.Component {
                 </div>
                 <div className="row">
                     <div className="col-xs-10">   
-                        <button className="btn btn-primary" onClick={() => {this.props.setName(this.state.user.name)}}>
+                        <button className="btn btn-primary" onClick={() => {this.props.setNameAction(this.state.user.name)}}>
                             Change the username
                         </button>
                     </div>
@@ -52,10 +53,7 @@ class Main extends React.Component {
 const mapDispatchToProps = (dispatch) => {
     return {
         setName: (name) => {
-            dispatch({
-                type: "SET_NAME",
-                payload: name
-            });
+            dispatch(setNameAction(name));
         }
     };
 };
